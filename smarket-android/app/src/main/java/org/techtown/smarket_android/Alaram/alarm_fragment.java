@@ -27,30 +27,58 @@ import java.util.List;
 
 public class alarm_fragment extends Fragment {
 
-    public static alarm_fragment newInstance(){
+    public static alarm_fragment newInstance() {
         return new alarm_fragment();
     }
 
 
     private LineChart lineChart;
     private ConstraintLayout timeSet_view;
-    ViewGroup viewGroup;
+    //    ViewGroup viewGroup;//
+    private View v;
     private int nSelectItem;
     private TextView timeSet_tv;
-    private Switch alarm_switch;
-    private boolean alarm_checked = false;
+    private Switch alarmSwitch;
+    private boolean alarmChecked = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewGroup = (ViewGroup) inflater.inflate(R.layout.alarm_main, container, false);
+//        viewGroup = (ViewGroup) inflater.inflate(R.layout.alarm_main, container, false);
+        v = inflater.inflate(R.layout.alarm_main, container, false);
 
-        lineChart = viewGroup.findViewById(R.id.linechart);
+//        lineChart = viewGroup.findViewById(R.id.linechart);
 
+//        alarm_switch = viewGroup.findViewById(R.id.alarm_setting_switch);
+
+
+//        timeSet_view = viewGroup.findViewById(R.id.timeSet_view);
+//        timeSet_tv = viewGroup.findViewById(R.id.timeSet_tv2);
+
+        setWidgets();
+
+        setLineChart();
+
+        setAlarmSwitchDefaultText();
+
+        setTimeSetView();
+
+        return v;
+    }
+
+    private void setWidgets() {
+        lineChart = v.findViewById(R.id.linechart);
+        alarmSwitch = v.findViewById(R.id.alarm_setting_switch);
+        timeSet_view = v.findViewById(R.id.timeSet_view);
+        timeSet_tv = v.findViewById(R.id.timeSet_tv2);
+    }
+
+    private void setLineChart() {
         List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1,1));
-        entries.add(new Entry(2,2));
-        entries.add(new Entry(3,0));
-        entries.add(new Entry(4,4));
+        entries.add(new Entry(1, 1));
+        entries.add(new Entry(2, 2));
+        entries.add(new Entry(3, 0));
+        entries.add(new Entry(4, 4));
 
         LineDataSet lineDataSet = new LineDataSet(entries, "속성명1");
 
@@ -68,27 +96,26 @@ public class alarm_fragment extends Fragment {
 
         lineChart.setData(lineData);
         lineChart.invalidate();
+    }
 
-        alarm_switch = viewGroup.findViewById(R.id.alarm_setting_switch);
-        if(alarm_checked){
-            alarm_switch.setText("ON");
-        }else {
-            alarm_switch.setTextOff("OFF");
+    private void setAlarmSwitchDefaultText() {
+        if (alarmChecked) {
+            alarmSwitch.setText("ON");
+        } else {
+            alarmSwitch.setTextOff("OFF");
         }
+    }
 
-
-        timeSet_view = viewGroup.findViewById(R.id.timeSet_view);
-        timeSet_tv = viewGroup.findViewById(R.id.timeSet_tv2);
+    private void setTimeSetView() {
         timeSet_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timeSet();
             }
         });
-        return viewGroup;
     }
 
-    private void timeSet(){
+    private void timeSet() {
         final String[] timeList = {"1시간 마다", "3시간 마다", "6시간 마다", "12시간 마다"};
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
 
@@ -102,7 +129,7 @@ public class alarm_fragment extends Fragment {
                 .setPositiveButton("선택", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(nSelectItem>=0)
+                        if (nSelectItem >= 0)
                             timeSet_tv.setText(timeList[nSelectItem]);
                     }
                 })
